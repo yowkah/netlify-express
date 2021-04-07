@@ -41,6 +41,7 @@ router.get('/login', (req, res) => {
 
 // securing all the routes behind the secure path
 router.get('/secure/*', (req, res, next) => {
+  console.log('secure ayyy');
   if(req.signedCookies.loginValidUntill && req.signedCookies.loginValidUntill*1 > Date.now()) next();
   else {
     res.redirect('/.netlify/functions/server/login');
