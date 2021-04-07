@@ -49,9 +49,7 @@ router.get('/secure/*', (req, res, next) => {
 
 // for everything that gest through, we serve the static files in /public
 
-router.get('*', (req, res) => {
-  express.static(path.join(__dirname, '../public'));
-})
+router.get('*', express.static(path.join(__dirname, '../public')));
 
 
 module.exports = app;
