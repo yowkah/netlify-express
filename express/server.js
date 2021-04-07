@@ -18,6 +18,7 @@ const users = {
 
 // making sure we can access lambda
 app.use('/.netlify/functions/server', router);  // path must route to lambda
+app.use('/', (req, res) => res.sendFile(path.join(__dirname, '../index.html')));
 
 // if we receive a post request on the login endpoint
 router.post('/login', (req, res) => {
@@ -47,8 +48,8 @@ router.get('/secure/*', (req, res, next) => {
 })
 
 // for everything that gest through, we serve the static files in /public
-router.get('/*', express.static(path.resolve(__dirname, '../public')));
 
+router.get('/*', express.static(path.resolve(__dirname, '../public')));
 
 
 module.exports = app;

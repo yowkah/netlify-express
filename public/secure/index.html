@@ -33,7 +33,7 @@
   </div>
   <script>
     document.getElementById('logoutButton').addEventListener('click', () => {
-      fetch('/logout')
+      fetch('../logout')
         .then(result => {
           if (result.status > 299) location.assign('/');
           else {
