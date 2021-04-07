@@ -7,9 +7,9 @@ const path = require('path');
 
 const router = express.Router();
 
-router.use(express.json());
+app.use(express.json());
 
-router.use(cookieParser('allKeyboardCatsAssembleNextFridayPlease'))
+app.use(cookieParser('allKeyboardCatsAssembleNextFridayPlease'))
 
 const users = {
   timo: 'timmy',
@@ -42,7 +42,7 @@ router.get('/login', (req, res) => {
 router.get('/secure/*', (req, res, next) => {
   if(req.signedCookies.loginValidUntill && req.signedCookies.loginValidUntill*1 > Date.now()) next();
   else {
-    res.redirect('/login');
+    res.redirect('/.netlify/functions/server/login');
   }
 })
 
