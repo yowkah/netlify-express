@@ -1,22 +1,55 @@
 'use strict';
 const express = require('express');
-const path = require('path');
 const serverless = require('serverless-http');
 const app = express();
-const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const path = require('path');
 
 const router = express.Router();
-router.get('/', (req, res) => {
-  res.writeHead(200, { 'Content-Type': 'text/html' });
-  res.write('<h1>Hello from Express.js!</h1>');
-  res.end();
-});
-router.get('/another', (req, res) => res.json({ route: req.originalUrl }));
-router.post('/', (req, res) => res.json({ postBody: req.body }));
 
-app.use(bodyParser.json());
+router.use(express.json());
+
+router.use(cookieParser('allKeyboardCatsAssembleNextFridayPlease'))
+
+const users = {
+  timo: 'timmy',
+  yowkah: 'netlifygod'
+}
+
+// making sure we can access lambda
 app.use('/.netlify/functions/server', router);  // path must route to lambda
-app.use('/', (req, res) => res.sendFile(path.join(__dirname, '../index.html')));
+
+// if we receive a post request on the login endpoint
+router.post('/login', (req, res) => {
+  if(users[req.body.username] === req.body.password) {
+    res.cookie('loginValidUntill', Date.now() + (12 * 60 * 60 * 1000), {signed: true}) //12 hours
+    res.send();
+  }
+  else {
+    res.status(403).send();
+  }
+})
+
+router.get('/logout', (req, res) => {
+  res.cookie('loginValidUntill', Date.now(), {signed: true});
+})
+
+router.get('/login', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '../public/index.html'));
+});
+
+// securing all the routes behind the secure path
+router.get('/secure/*', (req, res, next) => {
+  if(req.signedCookies.loginValidUntill && req.signedCookies.loginValidUntill*1 > Date.now()) next();
+  else {
+    res.redirect('/login');
+  }
+})
+
+// for everything that gest through, we serve the static files in /public
+router.get('/*', express.static(path.resolve(__dirname, '../public')));
+
+
 
 module.exports = app;
 module.exports.handler = serverless(app);

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-exp.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
+  <title>Netlfiy test security</title>
+  <style>
+
+    body, html, .grid-lg {
+      background-color: #f7f8f9;
+      height: 100%;
+    }
+    .grid-lg {
+      justify-content: center;
+      display:flex;
+      flex-direction: column;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container grid-lg">
+    <form class="columns" id="loginForm">
+      <h1 class="h1 column col-12">Let's log in</h1>
+      <div class="form-group column col-12">
+        <label class="form-label" for="usernameInput">Username</label>
+        <input type="text" class="form-input" id="usernameInput" placeholder="Timmy">
+      </div>
+      <div class="form-group column col-12">
+        <label class="form-label" for="passwordInput">Password</label>
+        <input type="password" class="form-input" id="passwordInput">
+      </div>
+      <div class="form-group column col-3">
+        <button class="btn btn-primary column col-12" id="login">Login</button>
+      </div>
+    </form>
+    <div class="columns" id="error"></div>
+  </div>
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const username = document.getElementById('usernameInput').value
+      const password = document.getElementById('passwordInput').value
+      fetch('/login', {
+        method: 'POST',
+        body: JSON.stringify({username, password}),
+        headers: {'Content-Type': "application/json"}
+      })
+        .then((response) => {location.assign('/secure/')})
+        .catch((err) => {
+          document.getElementById("error").innerHTML = JSON.stringify(err,null,2);
+        })
+      return false;
+    })
+  </script>
+</body>
+</html>

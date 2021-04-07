@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-exp.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
+  <title>Secured area</title>
+  <style>
+    html, body, .empty {
+      height: 100%;
+    }
+
+    .empty {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="empty">
+    <div class="empty-icon">
+      <i class="icon icon-people icon-3x"></i>
+    </div>
+    <p class="empty-title h5">You have entered the secured area</p>
+    <p class="empty-subtitle">Oooohhh look at all these secrets! so fancy.</p>
+    <div class="empty-action">
+      <button class="btn btn-primary" id="logoutButton">Log Out</button>
+    </div>
+  </div>
+  <script>
+    document.getElementById('logoutButton').addEventListener('click', () => {
+      fetch('/logout')
+        .then(result => {
+          if (result.status > 299) location.assign('/');
+          else {
+            console.log('eeuuuhhh...')
+          }
+        }).catch(err => {
+          throw err;
+        })
+    })
+  </script>
+</body>
+</html>
